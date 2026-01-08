@@ -1,4 +1,5 @@
 import express from "express";
+import { authenticateAdmin } from "../middlewares/auth_middleware.js";
 import {
   getAllPhotographers,
   getPhotographerId,
@@ -11,8 +12,8 @@ const router = express.Router();
 
 router.get("/", getAllPhotographers);
 router.get("/:id", getPhotographerId);
-router.post("/", createPhotographer);
-router.put("/:id", updatePhotographer);
-router.delete("/:id", deletePhotographer);
+router.post("/", authenticateAdmin, createPhotographer);
+router.put("/:id", authenticateAdmin, updatePhotographer);
+router.delete("/:id", authenticateAdmin, deletePhotographer);
 
 export default router;
