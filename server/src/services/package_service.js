@@ -1,6 +1,6 @@
 import {
   findAllPackage,
-  finfPackageById,
+  findPackageById,
   createPackage,
   updatePackage,
   deletePackage,
@@ -11,7 +11,7 @@ export const getPackages = async () => {
 };
 
 export const getPackageById = async (id) => {
-  return await finfPackageById(id);
+  return await findPackageById(id);
 };
 
 export const createNewPackage = async (packageData) => {
