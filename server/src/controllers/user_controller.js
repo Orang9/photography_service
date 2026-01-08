@@ -1,9 +1,11 @@
+import jwt from "jsonwebtoken";
 import {
   getUsers,
   getUserById,
   createNewUser,
   updateExistingUser,
   deleteExistingUser,
+  authenticateUser,
 } from "../services/user_service.js";
 
 export const getAllUsers = async (_, res) => {
@@ -67,6 +69,36 @@ export const updateUser = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "User updated successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await authenticateUser(email, password);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+    // Generate JWT token
+    const token = jwt.sign(
+      { user_id: user.user_id, email: user.email, role: user.role },
+      process.env.JWT_SECRET || "default_secret",
+      { expiresIn: "1h" }
+    );
+    // Remove password from response
+    const { password: _, ...userWithoutPassword } = user;
+    res.status(200).json({
+      success: true,
+      data: { ...userWithoutPassword, token },
     });
   } catch (error) {
     res.status(500).json({

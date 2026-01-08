@@ -43,7 +43,7 @@ export const getResultFileId = async (req, res) => {
   }
 };
 
-export const createNewPhotographer = async (req, res) => {
+export const createResultFile = async (req, res) => {
   try {
     const resultFile = req.body;
     const id = await createNewResultFile(resultFile);
@@ -59,7 +59,7 @@ export const createNewPhotographer = async (req, res) => {
   }
 };
 
-export const updateExistingPhotographer = async (req, res) => {
+export const updateResultFile = async (req, res) => {
   try {
     const resultFile = req.body;
     const id = await updateExistingResultFile(resultFile);
