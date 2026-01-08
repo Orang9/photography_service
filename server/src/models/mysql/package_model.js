@@ -11,7 +11,7 @@ export const findAllPackage = async () => {
     }
 };
 
-export const finfPackageById = async (id) => {
+export const findPackageById = async (id) => {
     const [rows] = await pool.query("SELECT * FROM package WHERE package_id = ?", [id]);
     return rows[0];
 };

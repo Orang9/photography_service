@@ -1,4 +1,4 @@
-import pool from "../../config/mysql_config.js";
+import pool from "../../config/mysql.js";
 
 export const findAllJob = async () => {
   try {

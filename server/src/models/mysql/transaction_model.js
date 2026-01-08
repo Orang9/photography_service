@@ -20,10 +20,10 @@ export const findTransactionById = async (id) => {
 };
 
 export const createTransaction = async (transaction) => {
-  const { user_id, location, total_amount, status } = transaction;
+  const { user_id, location, amount, status } = transaction;
   const [result] = await pool.query(
-    "INSERT INTO transaction (user_id, location, total_amount, status) VALUES (?, ?, ?, ?)",
-    [user_id, location, total_amount, status]
+    "INSERT INTO transaction (user_id, location, amount, status) VALUES (?, ?, ?, ?)",
+    [user_id, location, amount, status]
   );
   return result.insertId;
 };

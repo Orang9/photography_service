@@ -1,4 +1,5 @@
 import pool from "../../config/mysql.js";
+import bcrypt from "bcrypt";
 
 export const findAllUsers = async () => {
   try {
@@ -19,13 +20,27 @@ export const findUserById = async (id) => {
 
 export const createUser = async (user) => {
   const { username, fullname, email, password, role, phone } = user;
-  const [result] = await pool.query("INSERT INTO user (username, fullname, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)", [username, fullname, email, password, role, phone]);
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const [result] = await pool.query(
+    "INSERT INTO user (username, fullname, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)",
+    [username, fullname, email, hashedPassword, role, phone]
+  );
   return result.insertId;
 };
 
 export const updateUser = async (id, user) => {
   const { username, fullname, email, password, role, phone } = user;
-  await pool.query("UPDATE user SET username = ?, fullname = ?, email = ?, password = ?, role = ?, phone = ? WHERE user_id = ?", [username, fullname, email, password, role, phone, id]);
+  await pool.query(
+    "UPDATE user SET username = ?, fullname = ?, email = ?, password = ?, role = ?, phone = ? WHERE user_id = ?",
+    [username, fullname, email, password, role, phone, id]
+  );
+};
+
+export const loginUser = async (email) => {
+  const [rows] = await pool.query("SELECT * FROM user WHERE email = ?", [
+    email,
+  ]);
+  return rows[0];
 };
 
 export const deleteUser = async (id) => {
