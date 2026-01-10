@@ -1,21 +1,22 @@
-import { MongoClient } from 'mongodb';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-// Ganti <password> dengan password user database Atlas Anda
-const uri = process.env.MONGODB_URI
-const client = new MongoClient(uri);
-
-let db;
-
-const connectDB = async () => {
+dotenv.config();
+const connectMongoDB = async () => {
   try {
-    await client.connect();
-    db = client.db('photography_serviceDB');
-    console.log("Terhubung ke MongoDB Atlas");
+    // Pastikan MONGODB_URI di .env sudah benar (format: mongodb+srv://...)
+    const uri = process.env.MONGODB_URI;
+
+    console.log(uri);
+
+    await mongoose.connect(uri);
+
+    console.log("✅ Terhubung ke MongoDB Atlas melalui Mongoose");
   } catch (err) {
-    console.error("Gagal koneksi ke Atlas:", err);
+    console.error("❌ Gagal koneksi ke Atlas:", err.message);
+    process.exit(1);
+    a;
   }
 };
 
-const getDB = () => db;
-
-module.exports = { connectDB, getDB };
+export default connectMongoDB;
