@@ -1,11 +1,5 @@
-function App() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-3xl font-bold text-green-600">
-        Tailwind CSS aktif 🚀
-      </h1>
-    </div>
-  );
-}
+import AppRoutes from "./routes/AppRoutes";
 
-export default App;
+export default function App() {
+  return <AppRoutes />;
+}
