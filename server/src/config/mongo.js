@@ -1,15 +1,21 @@
-import mongoose from "mongoose";
+import { MongoClient } from 'mongodb';
 
-const MONGO_URI = "mongodb://127.0.0.1:27017/photography_serviceDB";
+// Ganti <password> dengan password user database Atlas Anda
+const uri = process.env.MONGODB_URI
+const client = new MongoClient(uri);
 
-const connectMongoDB = async () => {
+let db;
+
+const connectDB = async () => {
   try {
-    await mongoose.connect(MONGO_URI);
-    console.log("MongoDB connected: photography_serviceDB");
-  } catch (error) {
-    console.error("MongoDB connection error:", error);
-    process.exit(1);
+    await client.connect();
+    db = client.db('photography_serviceDB');
+    console.log("Terhubung ke MongoDB Atlas");
+  } catch (err) {
+    console.error("Gagal koneksi ke Atlas:", err);
   }
 };
 
-export default connectMongoDB;
+const getDB = () => db;
+
+module.exports = { connectDB, getDB };

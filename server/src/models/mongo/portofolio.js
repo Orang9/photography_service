@@ -19,7 +19,10 @@ const portfolioSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  { collection: "portfolios" }
+  { 
+    collection: "portfolios",
+    versionKey: false 
+  }
 );
 
 export default mongoose.model("Portfolio", portfolioSchema);
