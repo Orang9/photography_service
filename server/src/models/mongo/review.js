@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const reviewSchema = new mongoose.Schema(
   {
     portfolio_id: {
-      type: Number,
+      type: String,
       ref: "Portfolio",
       required: true,
     },
