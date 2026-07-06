@@ -1,31 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "../../components/common/Button";
+import { useAuth } from "../../context/AuthContext";
 
 export default function HistoryPage() {
+  const { user } = useAuth();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
-  const orders = [
-    {
-      id: "BK-2025-001",
-      date: "20 Okt 2025",
-      status: "Waiting Payment",
-      total: "Rp 500.000",
-    },
-    {
-      id: "BK-2025-002",
-      date: "20 Okt 2025",
-      status: "Waiting Approval",
-      total: "Rp 500.000",
-    },
-    {
-      id: "BK-2025-003",
-      date: "20 Okt 2025",
-      status: "Complete",
-      total: "Rp 500.000",
-    },
-  ];
+  const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!user?.id) return;
+      try {
+        const res = await fetch(`http://localhost:3000/api/transactions/user/${user.id}`);
+        const data = await res.json();
+        if (data.success) {
+          setOrders(data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch history:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchOrders();
+  }, [user]);
   const handleSubmitReview = async () => {
     if (rating === 0 || reviewText.trim() === "") {
       alert("Rating dan ulasan wajib diisi");
@@ -41,9 +43,6 @@ export default function HistoryPage() {
       };
 
       console.log("DATA REVIEW:", payload);
-
-      // NANTI AKTIFKAN SAAT BACKEND SUDAH SIAP
-      // await api.post("/reviews", payload);
 
       setShowReviewModal(false);
       setRating(0);
@@ -61,36 +60,42 @@ export default function HistoryPage() {
       </p>
 
       <div className="space-y-6">
-        {orders.map((order, idx) => (
-          <div
-            key={idx}
-            className="border border-black/40 p-6 flex justify-between"
-          >
-            {/* LEFT */}
+        {isLoading ? (
+          <div className="text-center py-10 text-gray-500">Memuat riwayat...</div>
+        ) : orders.length === 0 ? (
+          <div className="text-center py-10 text-gray-500 border border-dashed border-gray-300">
+            Anda belum memiliki riwayat pesanan.
+          </div>
+        ) : (
+          orders.map((order, idx) => (
+            <div
+              key={idx}
+              className="border border-black/40 p-6 flex justify-between"
+            >
+            {/* Informasi Detail Pemotretan */}
             <div className="space-y-1 text-sm">
-              <h3 className="font-bold text-lg mb-2">Order #{order.id}</h3>
+              <h3 className="font-bold text-lg mb-2">Order {order.id}</h3>
               <p>{order.date}</p>
-              <p>Paket: Wisuda Platinum</p>
-              <p>Lokasi: UI Depok</p>
-              <p>Durasi: 2 jam</p>
-              <p>Total: {order.total}</p>
+              <p>Paket: {order.package_name || "Custom"}</p>
+              <p>Lokasi: {order.location || "-"}</p>
+              <p>Total: Rp {Number(order.total)?.toLocaleString('id-ID') || "-"}</p>
 
               {order.status === "Waiting Payment" && (
-                <p className="text-xs mt-2 italic">Jatuh tempo: 21 Okt 2025</p>
+                <p className="text-xs mt-2 italic text-red-500">Silakan selesaikan pembayaran DP</p>
               )}
             </div>
 
-            {/* RIGHT */}
+            {/* Bagian Status dan Aksi */}
             <div className="flex flex-col justify-between items-end">
-              {/* STATUS TEXT (BUKAN DROPDOWN) */}
+              {/* Label Status */}
               <span className="text-xs border border-black px-3 py-1">
                 {order.status}
               </span>
 
-              {/* ACTION BUTTONS */}
+              {/* Tombol Aksi Berdasarkan Status */}
               <div className="flex gap-2 mt-4">
-                {order.status === "Waiting Payment" && (
-                  <Link to="/payment">
+                {(order.status === "Waiting Payment" || order.status === "Payment Rejected") && (
+                  <Link to={`/payment/${order.id.replace('BK-', '').split('-')[1]}`}>
                     <Button className="bg-[#4D4D4D] text-white px-6 py-2 text-sm rounded shadow-sm hover:bg-black">
                       Upload Bukti
                     </Button>
@@ -113,7 +118,8 @@ export default function HistoryPage() {
               </div>
             </div>
           </div>
-        ))}
+          ))
+        )}
       </div>
       {showReviewModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

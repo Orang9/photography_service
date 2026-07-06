@@ -1,4 +1,5 @@
 // src/pages/HomePage.jsx
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "../../components/common/Button";
 import Card from "../../components/common/Card";
@@ -7,6 +8,25 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function HomePage() {
   const { user } = useAuth();
+  const [activeBookingsCount, setActiveBookingsCount] = useState(0);
+
+  useEffect(() => {
+    const fetchActiveBookings = async () => {
+      if (!user?.id) return;
+      try {
+        const res = await fetch(`http://localhost:3000/api/transactions/user/${user.id}`);
+        const data = await res.json();
+        if (data.success) {
+          // Hitung transaksi yang belum Complete atau Cancelled
+          const active = data.data.filter(t => t.status !== 'Complete' && t.status !== 'Cancelled');
+          setActiveBookingsCount(active.length);
+        }
+      } catch (error) {
+        console.error("Failed to fetch active bookings:", error);
+      }
+    };
+    fetchActiveBookings();
+  }, [user]);
 
   return (
     <div className="bg-[#E8D4C3] min-h-screen py-10">
@@ -39,7 +59,7 @@ export default function HomePage() {
           <Card className="flex items-center justify-between bg-white border-l-4 border-l-[#13273F]">
             <div>
               <p className="text-sm text-[#6B7280]">Booking Aktif</p>
-              <h3 className="text-2xl font-bold text-[#1F2937]">0 Pesanan</h3>
+              <h3 className="text-2xl font-bold text-[#1F2937]">{activeBookingsCount} Pesanan</h3>
             </div>
             <div className="bg-[#E8D4C3] p-3 rounded-full text-[#13273F]">
               📅

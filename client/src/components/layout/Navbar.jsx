@@ -20,11 +20,15 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
-          <Link to="/">Home</Link>
 
           {isLoggedIn ? (
             <>
-              <Link to="/history">History</Link>
+              <Link to="/">Home</Link>
+              {user?.role === "admin" ? (
+                <Link to="/admin/transactions">History</Link>
+              ) : (
+                <Link to="/history">History</Link>
+              )}
               <Link to="/booking">Booking</Link>
 
               <Button

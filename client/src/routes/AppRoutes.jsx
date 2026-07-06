@@ -13,6 +13,8 @@ import PaymentPage from "../pages/Payment/PaymentPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import AdminHomePage from "../pages/Admin/AdminHomePage";
 import AdminApprovalPage from "../pages/Admin/AdminApprovalPage";
+import AdminTransactionPage from "../pages/Admin/AdminTransactionPage";
+
 
 export default function AppRoutes() {
   const { user } = useAuth();
@@ -31,12 +33,19 @@ export default function AppRoutes() {
 
       <main className="grow">
         <Routes>
-          <Route path="/" element={user ? <HomePage /> : <LandingPage />} />
+          <Route path="/" element={user ? (user.role === "admin" ? <AdminHomePage /> : <HomePage />) : <LandingPage />} />
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/history" element={<HistoryPage />} />
-          <Route path="/payment" element={<PaymentPage />} />
+          <Route
+            path="/history"
+            element={
+              <ProtectedRoute>
+                <HistoryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/payment/:id" element={<PaymentPage />} />
 
           <Route
             path="/home"
@@ -53,6 +62,19 @@ export default function AppRoutes() {
               <ProtectedRoute>
                 {user?.role === "admin" ? (
                   <AdminApprovalPage />
+                ) : (
+                  <Navigate to="/home" />
+                )}
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/transactions"
+            element={
+              <ProtectedRoute>
+                {user?.role === "admin" ? (
+                  <AdminTransactionPage />
                 ) : (
                   <Navigate to="/home" />
                 )}

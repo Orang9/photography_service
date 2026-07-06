@@ -1,3 +1,10 @@
+import portofolio_image1 from "../../assets/images/portofolio/portofolio-image1.jpg";
+import portofolio_image2 from "../../assets/images/portofolio/portofolio-image2.jpg";
+import portofolio_image3 from "../../assets/images/portofolio/portofolio-image3.jpg";
+import portofolio_image4 from "../../assets/images/portofolio/portofolio-image4.jpg";
+import portofolio_image5 from "../../assets/images/portofolio/portofolio-image5.jpg";
+import portofolio_image6 from "../../assets/images/portofolio/portofolio-image6.jpg";
+
 export default function Portofolio() {
   return (
     <section className="py-24 bg-[#E8D4C3] px-12">
@@ -10,107 +17,107 @@ export default function Portofolio() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        {/* Column 1 */}
         <div className="space-y-12">
           <div className="space-y-4">
             <div className="bg-gray-200 aspect-3/4 overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000"
+                src={portofolio_image1}
                 className="w-full h-full object-cover"
                 alt="Portfolio"
               />
             </div>
             <div className="shadow border-b-2 pr-4 pb-4">
-              <h4 className="font-medium">Product Title</h4>
+              <h4 className="font-medium">Joyful Moments at Bakrie</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                Detailed description about the photoshoot, the lighting, and the
-                artistic direction taken for this specific project.
+                Menangkap ekspresi lega dan tawa lepas pasca kelulusan. Sesi
+                outdoor yang fresh dengan tone warna cerah khas Aynfaal.
               </p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="bg-gray-200 aspect-square overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1000"
+                src={portofolio_image2}
                 className="w-full h-full object-cover"
                 alt="Portfolio"
               />
             </div>
             <div className="shadow border-b-2 pr-4 pb-4">
-              <h4 className="font-medium">Floral Studies</h4>
+              <h4 className="font-medium">Elegant Graduation Portrait</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                Capturing the delicate nature of flora in high contrast
-                environments.
+                Tampil anggun di hari istimewa. Perpaduan pose natural dan
+                lighting lembut untuk menonjolkan aura kebahagiaan wisudawati.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Column 2 - Higher Center */}
         <div className="space-y-12 md:-mt-12">
           <div className="space-y-4">
             <div className="bg-gray-200 aspect-2/3 overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000"
+                src={portofolio_image3}
                 className="w-full h-full object-cover"
                 alt="Portfolio"
               />
             </div>
             <div className="shadow border-b-2 pr-4 pb-4">
-              <h4 className="font-medium">Editorial Portrait</h4>
+              <h4 className="font-medium">Timeless Pride</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                Fashion photography focused on modern silhouettes and urban
-                landscapes.
+                Sebuah potret kebanggaan alumni USNI. Komposisi klasik yang
+                memastikan kenangan wisuda tetap relevan dilihat bertahun-tahun
+                lagi.
               </p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="bg-gray-200 aspect-4/3 overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1000"
+                src={portofolio_image4}
                 className="w-full h-full object-cover"
                 alt="Portfolio"
               />
             </div>
             <div className="shadow border-b-2 pr-4 pb-4">
-              <h4 className="font-medium">Human Connection</h4>
+              <h4 className="font-medium">Bold & Classic</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                Candid moments that show the raw emotion of human interaction.
+                Sesi wisuda maskulin dan berwibawa. Fokus pada detail toga dan
+                ekspresi percaya diri menyambut masa depan.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Column 3 */}
         <div className="space-y-12">
           <div className="space-y-4">
             <div className="bg-gray-200 aspect-square overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000"
+                src={portofolio_image5}
                 className="w-full h-full object-cover"
                 alt="Portfolio"
               />
             </div>
             <div className="border-b-2 pb-4">
-              <h4 className="font-medium">Architecture</h4>
+              <h4 className="font-medium">Intimate Sacred Vows</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                Lines, shadows, and geometry in the modern concrete jungle.
+                Momen sakral penyatuan janji suci. Diabadikan dengan pendekatan
+                candid untuk menangkap emosi haru dan tatapan penuh cinta.
               </p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="bg-gray-200 aspect-3/4 overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000"
+                src={portofolio_image6}
                 className="w-full h-full object-cover"
                 alt="Portfolio"
               />
             </div>
             <div className="border-b-2 pb-4">
-              <h4 className="font-medium">Movement</h4>
+              <h4 className="font-medium">A New Beginning</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                The art of motion captured through long exposure and steady
-                hands.
+                Tawa bahagia pasangan baru. Dokumentasi resepsi yang hangat,
+                menangkap chemistry natural tanpa pose yang kaku.
               </p>
             </div>
           </div>
