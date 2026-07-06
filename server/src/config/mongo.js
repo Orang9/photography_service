@@ -2,20 +2,35 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
+
 const connectMongoDB = async () => {
   try {
-    // Pastikan MONGODB_URI di .env sudah benar (format: mongodb+srv://...)
     const uri = process.env.MONGODB_URI;
+    if (!uri) {
+      throw new Error("MONGODB_URI is not defined in environment variables");
+    }
 
-    console.log(uri);
+    // Set up connection event listeners before connecting
+    mongoose.connection.on("connected", () => {
+      console.log("✅ Terhubung ke MongoDB Atlas melalui Mongoose");
+    });
 
-    await mongoose.connect(uri);
+    mongoose.connection.on("error", (err) => {
+      console.error("❌ MongoDB connection error:", err.message);
+    });
 
-    console.log("✅ Terhubung ke MongoDB Atlas melalui Mongoose");
+    mongoose.connection.on("disconnected", () => {
+      console.warn("⚠️ MongoDB disconnected");
+    });
+
+    // Connect with a timeout to prevent hanging startup
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+    });
   } catch (err) {
     console.error("❌ Gagal koneksi ke Atlas:", err.message);
-    process.exit(1);
-    a;
+    // Rethrow the error so it can be handled by server.js gracefully
+    throw err;
   }
 };
 
