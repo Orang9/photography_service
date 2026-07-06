@@ -26,11 +26,28 @@ export const createJob = async (job) => {
 };
 
 export const updateJob = async (id, job) => {
-  const { transaction_id, photographer_id, status } = job;
-  await pool.query(
-    "UPDATE job SET transaction_id = ?, photographer_id = ?, status = ? WHERE job_id = ?",
-    [transaction_id, photographer_id, status, id]
+  // Dynamic update to handle when only 'status' is provided (since transaction_id/photographer_id would be undefined)
+  const fields = [];
+  const values = [];
+  if (job.transaction_id !== undefined) {
+    fields.push("transaction_id = ?");
+    values.push(job.transaction_id);
+  }
+  if (job.photographer_id !== undefined) {
+    fields.push("photographer_id = ?");
+    values.push(job.photographer_id);
+  }
+  if (job.status !== undefined) {
+    fields.push("status = ?");
+    values.push(job.status);
+  }
+  values.push(id);
+
+  const [result] = await pool.query(
+    `UPDATE job SET ${fields.join(", ")} WHERE job_id = ?`,
+    values
   );
+  return result;
 };
 
 export const deleteJob = async (id) => {

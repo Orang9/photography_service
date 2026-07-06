@@ -1,6 +1,7 @@
 import {
   findAllTransaction,
   findTransactionById,
+  findTransactionsByUserId,
   createTransaction,
   updateTransaction,
   deleteTransaction,
@@ -8,6 +9,10 @@ import {
 
 export const getTransactions = async () => {
   return await findAllTransaction();
+};
+
+export const getTransactionsByUser = async (userId) => {
+  return await findTransactionsByUserId(userId);
 };
 
 export const getTransactionById = async (id) => {

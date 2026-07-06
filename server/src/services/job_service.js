@@ -19,7 +19,7 @@ export const createNewJob = async (job) => {
 };
 
 export const updateExistingJob = async (id, job) => {
-  await updateJob(id, job);
+  return await updateJob(id, job);
 };
 
 export const deleteExistingJob = async (id) => {

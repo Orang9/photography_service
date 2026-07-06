@@ -1,18 +1,19 @@
 import express from "express";
 import {
-  getAllPhotographers,
-  getPhotographerId,
-  createPhotographer,
-  updatePhotographer,
-  deletePhotographer,
-} from "../controllers/photographer_controller.js";
+  getAllJobs,
+  getJobId,
+  createJob,
+  updateJob,
+  deleteJob,
+} from "../controllers/job_controller.js";
+import { validateRequest, jobUpdateSchema } from "../middlewares/validate.js";
 
 const router = express.Router();
 
-router.get("/", getAllPhotographers);
-router.get("/:id", getPhotographerId);
-router.post("/", createPhotographer);
-router.put("/:id", updatePhotographer);
-router.delete("/:id", deletePhotographer);
+router.get("/", getAllJobs);
+router.get("/:id", getJobId);
+router.post("/", validateRequest(jobUpdateSchema), createJob);
+router.put("/:id", validateRequest(jobUpdateSchema), updateJob);
+router.delete("/:id", deleteJob);
 
 export default router;

@@ -1,5 +1,6 @@
 import {
   getTransactions,
+  getTransactionsByUser,
   getTransactionById,
   createNewTransaction,
   updateExistingTransaction,
@@ -9,6 +10,22 @@ import {
 export const getAllTransactions = async (_, res) => {
   try {
     const transactions = await getTransactions();
+    res.status(200).json({
+      success: true,
+      data: transactions,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getUserTransactions = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const transactions = await getTransactionsByUser(userId);
     res.status(200).json({
       success: true,
       data: transactions,

@@ -63,7 +63,15 @@ export const updateJob = async (req, res) => {
   try {
     const { id } = req.params;
     const job = req.body;
-    await updateExistingJob(id, job);
+    const result = await updateExistingJob(id, job);
+    
+    if (!result || result.affectedRows === 0 || (Array.isArray(result) && result[0].affectedRows === 0)) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found",
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: "Job updated successfully",
