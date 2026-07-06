@@ -4,47 +4,84 @@ import Button from "../../components/common/Button";
 
 export default function AdminApprovalPage() {
   const [schedules, setSchedules] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // 🔹 Dummy data (nanti ganti API)
   useEffect(() => {
-    setSchedules([
-      {
-        id: 1,
-        order_code: "BK-2025-001",
-        client_name: "Rahma",
-        package_name: "Wisuda Platinum",
-        date: "21 Okt 2025",
-        time: "10:00",
-        location: "UI Depok",
-        status: "waiting",
-      },
-      {
-        id: 2,
-        order_code: "BK-2025-002",
-        client_name: "Ahmad",
-        package_name: "Event Documentation",
-        date: "23 Okt 2025",
-        time: "13:00",
-        location: "Jakarta Selatan",
-        status: "waiting",
-      },
-    ]);
+    const fetchSchedules = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/api/transactions');
+        const data = await res.json();
+        if (data.success) {
+          // Menyaring transaksi yang menunggu persetujuan jadwal
+          const waiting = data.data.filter(t => t.raw_status === "awaiting_schedule_approval" || t.status === "Waiting Schedule Approval" || t.status === "Menunggu Persetujuan");
+          
+          // Memformat data untuk ditampilkan pada antarmuka
+          const formatted = waiting.map(t => {
+            const rawId = t.id.replace('#TRX-', '');
+            return {
+              id: rawId,
+              order_code: `BK-2025-${rawId.padStart(3, '0')}`,
+              client_name: t.client_name,
+              package_name: t.package_name || "Custom",
+              date: t.transaction_date,
+              time: "-", // Waktu tergabung dalam string lokasi
+              location: t.location || "-",
+              status: "waiting",
+              raw_status: t.status
+            };
+          });
+          setSchedules(formatted);
+        }
+      } catch (error) {
+        console.error("Failed to fetch schedules:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchSchedules();
   }, []);
 
-  const handleApprove = (id) => {
-    setSchedules((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, status: "approved" } : item
-      )
-    );
+  const handleApprove = async (id) => {
+    try {
+      // Mengubah status menjadi unpaid agar client dapat membayar DP
+      const res = await fetch(`http://localhost:3000/api/transactions/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'unpaid' })
+      });
+      if (res.ok) {
+        alert(`Jadwal untuk Order #${id} disetujui. Client sekarang dapat mengunggah bukti pembayaran.`);
+        setSchedules((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, status: "approved" } : item
+          )
+        );
+      } else {
+        alert('Gagal menyetujui jadwal');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Terjadi kesalahan');
+    }
   };
 
-  const handleReject = (id) => {
-    setSchedules((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, status: "rejected" } : item
-      )
-    );
+  const handleReject = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/transactions/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'rejected' })
+      });
+      if (res.ok) {
+        setSchedules((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, status: "rejected" } : item
+          )
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
