@@ -80,9 +80,6 @@ Add additional notes about how to deploy this on a local machine and in a cloud 
 - **Server**: Deploy the Node.js backend to platforms like Render or Heroku. Configure environment variables (`.env`) for production.
 - **Database**: Use managed cloud databases such as AWS RDS (MySQL) and MongoDB Atlas (MongoDB) instead of local Docker containers.
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Release History
 
@@ -97,3 +94,6 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 ## Authors
 
 - **Fika Egbert Felica Wibianto** - *Full Stack Developer*
+- **Mohammad Faalih** - *UI/UX Developer*
+- **Nur Alika Pandoyo Putri** - *Backend developer*
+- **Yurfa Apridelia** - *Backend developer*
