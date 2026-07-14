@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import InvoiceCard from "../../components/sections/InvoiceCard";
 import PaymentStatusBadge from "../../components/sections/PaymentStatusBadge";
 import Button from "../../components/common/Button";
+import { CheckCircle } from "lucide-react";
 
 export default function PaymentPage() {
   const { id } = useParams();
@@ -18,6 +19,7 @@ export default function PaymentPage() {
     total: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     const fetchTransaction = async () => {
@@ -26,12 +28,12 @@ export default function PaymentPage() {
         const data = await res.json();
         if (data.success) {
           const t = data.data;
-          // Mengisi data invoice dari response API
+          const locMatch = t.location ? t.location.match(/(.+) - (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) \((.+)\)/) : null;
           setInvoice({
             client: t.client_name || "Client",
-            service: t.package_name || "Service Package",
-            date: t.created_at ? t.created_at.split('T')[0] : "-",
-            time: "-",
+            service: locMatch ? locMatch[4] : (t.package_name || "Service Package"),
+            date: locMatch ? locMatch[2] : (t.created_at ? t.created_at.split('T')[0] : "-"),
+            time: locMatch ? locMatch[3] : "-",
             total: t.amount || 0,
           });
           
@@ -56,7 +58,6 @@ export default function PaymentPage() {
   const handleUpload = async () => {
     if (!file) return alert("Upload bukti pembayaran terlebih dahulu");
     
-    // Mengupdate status transaksi menjadi menunggu verifikasi DP
     try {
       const payload = {
         status: "awaiting_dp_verification"
@@ -70,8 +71,7 @@ export default function PaymentPage() {
       
       if (res.ok) {
         setStatus("WAITING_VERIFICATION");
-        alert("Bukti pembayaran berhasil diunggah!");
-        navigate("/history");
+        setShowSuccessModal(true);
       } else {
         alert("Gagal mengunggah bukti pembayaran.");
       }
@@ -81,12 +81,17 @@ export default function PaymentPage() {
     }
   };
 
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+    navigate("/history");
+  };
+
   if (isLoading) {
     return <div className="max-w-xl mx-auto p-8 text-center text-gray-500">Memuat data pembayaran...</div>;
   }
 
   return (
-    <div className="max-w-xl mx-auto p-8">
+    <div className="max-w-xl mx-auto p-8 relative">
       <h1 className="text-2xl font-bold mb-4">Pembayaran</h1>
 
       <div className="flex items-center gap-2 mb-6">
@@ -127,6 +132,23 @@ export default function PaymentPage() {
         <p className="text-green-700 text-sm mt-4">
           Pembayaran telah diverifikasi. Terima kasih 🙏
         </p>
+      )}
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl animate-in zoom-in-95 duration-200">
+            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-slate-900 mb-2">Berhasil!</h3>
+            <p className="text-slate-600 mb-6">Bukti pembayaran Anda berhasil diunggah dan sedang menunggu verifikasi dari admin.</p>
+            <Button 
+              onClick={closeSuccessModal}
+              className="w-full bg-blue-600 text-white hover:bg-blue-700 rounded-xl"
+            >
+              Kembali ke Riwayat
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );
