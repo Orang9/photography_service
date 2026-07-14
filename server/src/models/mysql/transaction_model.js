@@ -9,6 +9,7 @@ export const findAllTransaction = async () => {
         -- Extract package name from the bracketed string we put in location for now
         SUBSTRING_INDEX(SUBSTRING_INDEX(t.location, '(', -1), ')', 1) as package_name,
         DATE_FORMAT(t.created_at, '%d/%m/%Y') as transaction_date,
+        t.decline_reason,
         CASE t.status
           WHEN 'awaiting_schedule_approval' THEN 'Menunggu Persetujuan'
           WHEN 'unpaid' THEN 'Menunggu Pembayaran'
@@ -33,12 +34,13 @@ export const findTransactionsByUserId = async (userId) => {
   try {
     const [rows] = await pool.query(`
       SELECT 
-        CONCAT('BK-', YEAR(t.created_at), '-', LPAD(t.transaction_id, 3, '0')) as id,
+        CONCAT('BK-', YEAR(t.created_at), '-', LPAD(t.transaction_id, 5, '0')) as id,
         u.fullname as client_name,
         SUBSTRING_INDEX(SUBSTRING_INDEX(t.location, '(', -1), ')', 1) as package_name,
         t.location,
         t.amount as total,
         DATE_FORMAT(t.created_at, '%d %b %Y') as date,
+        t.decline_reason,
         CASE t.status
           WHEN 'awaiting_schedule_approval' THEN 'Waiting Schedule Approval'
           WHEN 'unpaid' THEN 'Waiting Payment'
@@ -105,6 +107,10 @@ export const updateTransaction = async (id, transaction) => {
   if (transaction.status !== undefined) {
     fields.push("status = ?");
     values.push(transaction.status);
+  }
+  if (transaction.decline_reason !== undefined) {
+    fields.push("decline_reason = ?");
+    values.push(transaction.decline_reason);
   }
 
   if (fields.length === 0) return;

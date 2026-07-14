@@ -83,6 +83,13 @@ export default function HistoryPage() {
               {order.status === "Waiting Payment" && (
                 <p className="text-xs mt-2 italic text-red-500">Silakan selesaikan pembayaran DP</p>
               )}
+
+              {order.status === "Payment Rejected" && order.decline_reason && (
+                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-xs font-bold text-red-700">Alasan Penolakan:</p>
+                  <p className="text-sm text-red-600 mt-1">{order.decline_reason}</p>
+                </div>
+              )}
             </div>
 
             {/* Bagian Status dan Aksi */}
