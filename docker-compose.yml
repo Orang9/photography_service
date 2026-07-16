@@ -12,7 +12,7 @@ services:
       - "3306:3306"
     volumes:
       # Membaca file SQL lu dan otomatis mengeksekusinya saat database pertama kali dibuat
-      - ./photography_service.sql:/docker-entrypoint-initdb.d/init.sql
+      # - ./photography_service.sql:/docker-entrypoint-initdb.d/init.sql
       # Menyimpan data agar tidak hilang saat container dimatikan
       - mysql_data:/var/lib/mysql
 
