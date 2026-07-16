@@ -16,7 +16,7 @@ export default function HomePage() {
     const fetchActiveBookings = async () => {
       if (!user?.id) return;
       try {
-        const res = await fetch(`http://localhost:3000/api/transactions/user/${user.id}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/user/${user.id}`);
         const data = await res.json();
         if (data.success) {
           // Hitung transaksi yang belum Complete atau Cancelled

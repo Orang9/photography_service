@@ -24,7 +24,7 @@ export default function PaymentPage() {
   useEffect(() => {
     const fetchTransaction = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/transactions/${id}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/${id}`);
         const data = await res.json();
         if (data.success) {
           const t = data.data;
@@ -63,7 +63,7 @@ export default function PaymentPage() {
         status: "awaiting_dp_verification"
       };
       
-      const res = await fetch(`http://localhost:3000/api/transactions/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

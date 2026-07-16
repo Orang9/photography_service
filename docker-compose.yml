@@ -16,5 +16,30 @@ services:
       # Menyimpan data agar tidak hilang saat container dimatikan
       - mysql_data:/var/lib/mysql
 
+  backend:
+    build: ./server
+    container_name: aynfaal_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mysql-db
+    env_file:
+      - ./server/.env
+    depends_on:
+      - mysql-db
+
+  frontend:
+    build:
+      context: ./client
+      args:
+        - VITE_API_URL=http://localhost:3000
+    container_name: aynfaal_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
 volumes:
   mysql_data:

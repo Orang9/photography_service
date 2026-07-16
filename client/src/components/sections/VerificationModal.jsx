@@ -25,7 +25,7 @@ export default function VerificationModal({ isOpen, onClose, transactionData, on
         bodyData.decline_reason = reason;
       }
       
-      const response = await fetch(`http://localhost:3000/api/transactions/${numericId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/${numericId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

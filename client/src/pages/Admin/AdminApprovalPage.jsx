@@ -19,7 +19,7 @@ export default function AdminApprovalPage() {
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/transactions');
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions`);
         const data = await res.json();
         if (data.success) {
           const waiting = data.data.filter(t => t.raw_status === "awaiting_schedule_approval" || t.status === "Waiting Schedule Approval" || t.status === "Menunggu Persetujuan");
@@ -51,7 +51,7 @@ export default function AdminApprovalPage() {
 
   const handleApprove = async (id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/transactions/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'unpaid' })
@@ -87,7 +87,7 @@ export default function AdminApprovalPage() {
     
     setIsSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:3000/api/transactions/${selectedDeclineId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/${selectedDeclineId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

@@ -10,7 +10,7 @@ export default function AdminTransactionPage() {
 
   const fetchTransactions = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/transactions');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions`);
       const data = await response.json();
       if (data.success) {
         const mappedData = data.data.map(t => ({
