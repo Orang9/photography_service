@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    container_name: backend-photography-service
+    restart: always
+    env_file:
+      - .env # Atau ./config/config.env, sesuaikan dengan lokasi file Anda
+    # volumes:
+    #   - ./public/uploads:/app/public/uploads # Buka komentar ini jika butuh folder upload
+    networks:
+      - private-net
+    # depends_on DIHAPUS karena beda file docker-compose (db-project-kampus sudah running)
+
+networks:
+  private-net:
+    external: true
